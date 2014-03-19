@@ -1,4 +1,4 @@
-# ACS_Regionalization
+# ACS Regionalization
 
 Code to reduce the margins of error in the American Community Survey (ACS) 
 through intelligent regionalization.
@@ -43,10 +43,16 @@ it](https://help.github.com/articles/fork-a-repo).
 
 ## Examples
 
-We have built two examples to show the functionality of the code. One is a
-very simple toy example on simulated data.  The second is a more complex
-example based on the Austin metro area.  All the input data is included in the
-repository.
+We have built two [IPython Notebooks](http://ipython.org/notebook) to show the
+functionality of the code.  All the input data needed to run the notebooks is
+included in the repository.
+
+* Toy Example (need to insert link to http://nbviewer.ipython.org) is a very
+  simple example on simulated data
+
+* Austin Example (need to insert link to http://nbviewer.ipython.org) is a
+  more complex example using data from the Austin metro area
+
 
 
 
