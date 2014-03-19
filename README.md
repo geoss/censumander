@@ -37,7 +37,9 @@ separately.
 ### ACS Regionalization Code
 
 You can download the actual regionalization code (i.e. this repository) by
-clicking the "Download ZIP" button on this page or you can [fork
+clicking the [Download
+ZIP](https://github.com/geoss/ACS_Regionalization/archive/master.zip) button
+on this page or you can [fork
 it](https://help.github.com/articles/fork-a-repo).
 
 
