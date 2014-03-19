@@ -8,6 +8,9 @@ specific approach taken here can be found in  Spielman and Folch (2014) and
 Folch and Spielman (2014).
 '''
 
+__author__ = "David C. Folch <dfolch@gmail.com>, Seth E. Spielman <seth.spielman@colorado.edu>"
+
+
 import pysal
 import numpy as np
 import time

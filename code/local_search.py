@@ -2,6 +2,7 @@
 Various pieces needed to conduct the local search (aka "swapping") stage.
 '''
 
+__author__ = "David C. Folch <dfolch@gmail.com>, Seth E. Spielman <seth.spielman@colorado.edu>"
 
 
 import copy

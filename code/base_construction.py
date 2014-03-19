@@ -2,6 +2,9 @@
 Various pieces needed for the base region construction stage.
 '''
 
+__author__ = "David C. Folch <dfolch@gmail.com>, Seth E. Spielman <seth.spielman@colorado.edu>"
+
+
 import copy
 import numpy as np
 import utils as UTILS

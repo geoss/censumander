@@ -2,6 +2,8 @@
 Functions to compute various intermediate statistics.
 '''
 
+__author__ = "David C. Folch <dfolch@gmail.com>, Seth E. Spielman <seth.spielman@colorado.edu>"
+
 
 import numpy as np
 import time
