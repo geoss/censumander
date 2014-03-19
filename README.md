@@ -47,7 +47,9 @@ it](https://help.github.com/articles/fork-a-repo).
 
 We have built two [IPython Notebooks](http://ipython.org/notebook) to show the
 functionality of the code.  All the input data needed to run the notebooks is
-included in the repository.
+included in the repository.  The notebooks require the
+[matplotlib](http://matplotlib.org/) library and [R](http://www.r-project.org)
+for the visulaizations.
 
 * Toy Example (need to insert link to http://nbviewer.ipython.org) is a very
   simple example on simulated data
