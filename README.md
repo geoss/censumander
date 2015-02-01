@@ -1,6 +1,6 @@
 # ACS Regionalization
 
-THis repository includea coe that reduces the margins of error in ACS Tract and Block Group Level Data by "intelligently" combining Census geographies together into regions.  A region is a collection of 1 or more census geographies that meets a user specified margin of error (or CV).  We refer to this procedeure as "regionalization."  
+This repository includea code that reduces the margins of error in ACS Tract and Block Group Level Data by "intelligently" combining Census geographies together into regions.  A region is a collection of 1 or more census geographies that meets a user specified margin of error (or CV).  We refer to this procedeure as "regionalization."  
 
 
 
