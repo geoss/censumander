@@ -20,17 +20,9 @@ that need to be installed.
 * [Bottleneck](https://pypi.python.org/pypi/Bottleneck) 0.7 or later
 
 
-We recommend installing [Anaconda
-python](https://store.continuum.io/cshop/anaconda/) as it bundles python and
-all the necessary libraries in one download, except
-[Bottleneck](https://pypi.python.org/pypi/Bottleneck).  An alternative is
-the [Enthought Python Distribution
-(EPD)](https://www.enthought.com/products/epd/); the academic and pay versions
-have all the libraries except [PySAL](http://pysal.org), while the free
-version requires [PySAL](http://pysal.org),
-[MDP](http://mdp-toolkit.sourceforge.net) and
-[Bottleneck](https://pypi.python.org/pypi/Bottleneck) to be installed
-separately. 
+We recommend installing [Enthought Canopy](https://www.enthought.com/products/canopy/) or [Anaconda
+python](https://store.continuum.io/cshop/anaconda/) as these two distributions bundle python and
+provide access to all the necessary libraries to run the code.
 
 
 ### ACS Regionalization Code
@@ -44,16 +36,15 @@ it](https://help.github.com/articles/fork-a-repo).
 
 ## Examples
 
-We have built two [IPython Notebooks](http://ipython.org/notebook) to show the
-functionality of the code.  All the input data needed to run the notebooks is
+We have built two [Jupyter Notebooks](https://jupyter.org/) to show the
+functionality of the code.  The notebooks and all input data needed to run them are
 included in the repository.  The notebooks require the
-[matplotlib](http://matplotlib.org/) library and [R](http://www.r-project.org)
-for the visulaizations.
+[matplotlib](http://matplotlib.org/), [shapely](http://toblerity.org/shapely/) and [geopandas](http://geopandas.org/) packages for the visulaizations. Static versions can be viewed from the following links.
 
-* [Toy Example](http://nbviewer.ipython.org/github/dfolch/map_test/blob/master/toy_example.ipynb?create=1)
+* [Toy Example](http://nbviewer.ipython.org/github/geoss/ACS_Regionalization/blob/master/code/toy_example.ipynb)
   is a very simple example on simulated data.
 
-* [Austin Example](http://nbviewer.ipython.org/github/dfolch/map_test/blob/master/austin.ipynb?create=1)
+* [Austin Example](http://nbviewer.ipython.org/github/geoss/ACS_Regionalization/blob/master/code/austin.ipynb)
   is a more complex example using data from the Austin metro area.
 
 
