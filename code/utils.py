@@ -146,17 +146,17 @@ def get_mv_cv(region, target_parts, cv_exclude):
     # IMPORTANT: maintain the order of count then proportion then ratio
     cvs = []
     # compute coefficient of variation for each count variable
-    if target_parts['target_est_count'] != None:
+    if target_parts['target_est_count'] is not None:
         est, sde = get_est_sde_count(region, target_parts)
         cvs.extend(get_cv(est, sde, cv_exclude[0]))
 
     # compute coefficient of variation for each proportion variable
-    if target_parts['target_est_prop'] != None:
+    if target_parts['target_est_prop'] is not None:
         est, sde = get_est_sde_prop(region, target_parts)
         cvs.extend(get_cv(est, sde, cv_exclude[1]))
     
     # compute coefficient of variation for each ratio variable
-    if target_parts['target_est_ratio'] != None:
+    if target_parts['target_est_ratio'] is not None:
         est, sde = get_est_sde_ratio(region, target_parts)
         cvs.extend(get_cv(est, sde, cv_exclude[2]))
     return cvs

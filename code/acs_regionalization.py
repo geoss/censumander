@@ -249,7 +249,7 @@ class ACS_Regions:
                 centroids.append(i.centroid)
             kd = pysal.common.KDTree(centroids)
             points = kd.data
-        elif points == None:
+        elif points is None:
             kd = None
         else:
             raise Exception, 'Unsupported type passed to points'
@@ -268,17 +268,17 @@ class ACS_Regions:
         # Also, convert MOEs to standard errors when appropriate
         total_vars = 0
         rows = 0
-        if target_est_count != None:
+        if target_est_count is not None:
             rows, cols = target_est_count.shape
             total_vars += cols
             target_parts['target_est_count'] = target_est_count * 1.0
             target_parts['target_sde_count'] = target_moe_count / 1.645
-        if target_est_prop != None:
+        if target_est_prop is not None:
             rows, cols = target_est_prop.shape
             total_vars += cols/2
             target_parts['target_est_prop'] = target_est_prop * 1.0
             target_parts['target_sde_prop'] = target_moe_prop / 1.645
-        if target_est_ratio != None:
+        if target_est_ratio is not None:
             rows, cols = target_est_ratio.shape
             total_vars += cols/2
             target_parts['target_est_ratio'] = target_est_ratio * 1.0
@@ -294,17 +294,17 @@ class ACS_Regions:
         position = 0
         target_th = []
         # IMPORTANT: maintain the order of count then proportion then ratio
-        if target_est_count != None:
+        if target_est_count is not None:
             target_est, target_th, position = mv_data_prep(target_est_count,\
                                               target_th_count, target_th_all,\
                                               target_est, target_th, position,\
                                               scale=1, ratio=False)
-        if target_est_prop != None:
+        if target_est_prop is not None:
             target_est, target_th, position = mv_data_prep(target_est_prop,\
                                               target_th_prop, target_th_all,\
                                               target_est, target_th, position,\
                                               scale=2, ratio=False)
-        if target_est_ratio != None:
+        if target_est_ratio is not None:
             target_est, target_th, position = mv_data_prep(target_est_ratio,\
                                               target_th_ratio, target_th_all,\
                                               target_est, target_th, position,\
@@ -322,7 +322,7 @@ class ACS_Regions:
         # compute zscores
         # NOTE: zscores computed using all data, i.e. we do not screen out
         #       observations in the exclude list.
-        if zscore and target_est!=None:
+        if zscore and target_est is not None:
             target_est = ZSCORE(target_est)
         
         # run principle components on target data (skip PCA if pca=False)
@@ -339,7 +339,7 @@ class ACS_Regions:
         #       not have to weight it later
         # NOTE: PCA computed using all data, i.e. we do not screen out
         #       observations in the exclude list.
-        if pca and target_est!=None:
+        if pca and target_est is not None:
             try:
                 # eigenvector approach
                 pca_node = MDP.nodes.PCANode()
@@ -400,7 +400,7 @@ class ACS_Regions:
             exit = "no feasible solution"
             time3a = time4 = time4a = time.time()
         else:
-            if target_est != None:
+            if target_est is not None:
                 # only compute SSDs if there are target_est variables
                 start_ssds = np.array([UTILS.sum_squares(region, target_est) for region in regions])
             else:
@@ -461,17 +461,17 @@ class ACS_Regions:
 
         # setup header for the pandas dataframes (estimates, MOEs, CVs)
         header = []
-        if target_est_count != None:
+        if target_est_count is not None:
             if 'pandas' in str(type(target_est_count)):
                 header.extend(target_est_count.columns.tolist())
             else:
                 header.extend(['count_var'+str(i) for i in range(target_est_count.shape[1])])
-        if target_est_prop != None:
+        if target_est_prop is not None:
             if 'pandas' in str(type(target_est_prop)):
                 header.extend(target_est_count.prop.tolist())
             else:
                 header.extend(['prop_var'+str(i) for i in range(target_est_prop.shape[1]/2)])
-        if target_est_ratio != None:
+        if target_est_ratio is not None:
             if 'pandas' in str(type(target_est_ratio)):
                 header.extend(target_est_ratio.columns.tolist())
             else:
@@ -489,7 +489,7 @@ class ACS_Regions:
 
         # setup header and pandas dataframe (count variable, if applicable)
         header = ['count']
-        if count_est != None:
+        if count_est is not None:
             if 'pandas' in str(type(count_est)):
                 header = [count_est.columns[0]]
         counts_region = pd.DataFrame(index=range(len(regions)), columns=header)
@@ -510,28 +510,28 @@ class ACS_Regions:
         ordered_region_ids = np.ones(w.n) * -9999
 
         for i, region in enumerate(regions):
-            if count_est != None:
+            if count_est is not None:
                 # get region totals for count variable
                 counts_region.ix[i] = count_est[region].sum()
                 for j in region:
                     counts_area.ix[j] = count_est[j]
             ests = []
             sdes = []
-            if target_est_count != None:
+            if target_est_count is not None:
                 # est, MOE and CV for count data
                 est, sde = UTILS.get_est_sde_count(region, target_parts)
                 est[np.isnan(est)] = 0.0   # clean up 0/0 case
                 sde[np.isnan(sde)] = 0.0   # clean up 0/0 case
                 ests.extend(est)
                 sdes.extend(sde)
-            if target_est_prop != None:
+            if target_est_prop is not None:
                 # est, MOE and CV for proportion data
                 est, sde = UTILS.get_est_sde_prop(region, target_parts)
                 est[np.isnan(est)] = 0.0   # clean up 0/0 case
                 sde[np.isnan(sde)] = 0.0   # clean up 0/0 case
                 ests.extend(est)
                 sdes.extend(sde)
-            if target_est_ratio != None:
+            if target_est_ratio is not None:
                 # est, MOE and CV for ratio data
                 est, sde = UTILS.get_est_sde_ratio(region, target_parts)
                 est[np.isnan(est)] = 0.0   # clean up 0/0 case
@@ -592,15 +592,15 @@ def wrapup_areas(region, target_parts,
     for j in region:
         ests = []
         sdes = []
-        if target_parts['target_est_count'] != None:
+        if target_parts['target_est_count'] is not None:
             est, sde = UTILS.get_est_sde_count([j], target_parts)
             ests.extend(est)
             sdes.extend(sde)
-        if target_parts['target_est_prop'] != None:
+        if target_parts['target_est_prop'] is not None:
             est, sde = UTILS.get_est_sde_prop([j], target_parts)
             ests.extend(est)
             sdes.extend(sde)
-        if target_parts['target_est_ratio'] != None:
+        if target_parts['target_est_ratio'] is not None:
             est, sde = UTILS.get_est_sde_ratio([j], target_parts)
             ests.extend(est)
             sdes.extend(sde)
@@ -679,21 +679,21 @@ def mv_data_prep(target_est_general, target_th_general, target_th_all,\
 def function_picker(count_est, count_th_min, count_th_max, target_th_count,\
                     target_th_prop=None, target_th_ratio=None, target_th_all=None):
     # set the appropriate objective function plan 
-    if count_th_min==None and count_th_max==None:
+    if count_th_min is None and count_th_max is None:
         build_region = BASE.build_region_cv_only
         enclave_test = BASE.enclave_test_cv_only
         local_test = LOCAL.local_test_cv_only
-    elif target_th_count == None and target_th_prop == None and\
-                                     target_th_ratio == None and\
-                                     target_th_all == None:
+    elif target_th_count is None and target_th_prop is None and\
+                                     target_th_ratio is None and\
+                                     target_th_all is None:
         build_region = BASE.build_region_count_only
         enclave_test = BASE.enclave_test_count_only
         local_test = LOCAL.local_test_count_only
-    elif count_th_min > 0 and count_th_max == None:
+    elif count_th_min > 0 and count_th_max is None:
         build_region = BASE.build_region_min_count
         enclave_test = BASE.enclave_test_cv_only # only need to test CV when adding areas
         local_test = LOCAL.local_test_min_count
-    elif count_th_min == None and count_th_max > 0:
+    elif count_th_min is None and count_th_max > 0:
         build_region = BASE.build_region_max_count
         enclave_test = BASE.enclave_test_max_count
         local_test = LOCAL.local_test_max_count

@@ -46,7 +46,7 @@ def base_region_iterator(w, count_th_min, count_th_max, count_est, target_th, ta
             # user passes in a unique anchor
             ids = [anchor]
             base_solutions = 1
-        elif anchor==None:
+        elif anchor is None:
             # create a randomly ordered list of anchor IDs
             ids = np.random.permutation(ids).tolist()
             if len(ids) < base_solutions:
@@ -98,10 +98,10 @@ def base_region_iterator(w, count_th_min, count_th_max, count_est, target_th, ta
                 best_ids = ids
                 best_enclaves = enclaves
                 best_ssd = 0
-                if target_est != None:
+                if target_est is not None:
                     for i in regions:
                         best_ssd += UTILS.sum_squares(i, target_est)
-            elif test_num_regions == best_num_regions and target_est != None:
+            elif test_num_regions == best_num_regions and target_est is not None:
                 # if same number of regions, take the solution with lowest
                 # SSD; if there are no target_est variables then there is no
                 # way to break ties (we just keep the first one)
