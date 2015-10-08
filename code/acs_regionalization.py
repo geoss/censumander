@@ -345,9 +345,18 @@ class ACS_Regions:
                 pca_node = MDP.nodes.PCANode()
                 target_est = pca_node.execute(target_est)  # get principle components
             except:
-                # singular value decomposition approach
-                pca_node = MDP.nodes.PCANode(svd=True)
-                target_est = pca_node.execute(target_est)  # get principle components
+                try:
+                    # singular value decomposition approach
+                    pca_node = MDP.nodes.PCANode(svd=True)
+                    target_est = pca_node.execute(target_est)  # get principle components
+                except:
+                    # NIPALS (Nonlinear Iterative Partial Least Squares) approach;
+                    # this is intended to handle cases with np.nan in target_est
+                    # http://sourceforge.net/p/mdp-toolkit/mailman/mdp-toolkit-users/?viewmonth=201111
+                    # http://stats.stackexchange.com/questions/35561/imputation-of-missing-values-for-pca
+                    pca_node = MDP.nodes.NIPALSNode()
+                    target_est = pca_node.execute(target_est)  # get principle components
+
             pca_variance = np.sqrt(pca_node.d / pca_node.total_variance)
             target_est = target_est * pca_variance  # weighting for SSD
 
