@@ -11,9 +11,10 @@ Folch and Spielman (2014).
 __author__ = "David C. Folch <dfolch@gmail.com>, Seth E. Spielman <seth.spielman@colorado.edu>"
 
 
-import pysal
+import pysal as ps
 import numpy as np
 import time
+import copy
 import scipy.spatial
 from scipy.stats.mstats import zscore as ZSCORE
 import mdp as MDP  # causing sklearn deprication warning
@@ -234,20 +235,20 @@ class ACS_Regions:
         # convert arbitrary IDs in W object to integers
         id2i = w.id2i
         neighbors = {id2i[key]:[id2i[neigh] for neigh in w.neighbors[key]] for key in w.id_order}
-        w = pysal.W(neighbors)
+        w = ps.W(neighbors)
         
         # build KDTree for use in finding base solution
         if issubclass(type(points), scipy.spatial.KDTree):
             kd = points
             points = kd.data
         elif type(points).__name__ == 'ndarray':
-            kd = pysal.common.KDTree(points)
-        elif issubclass(type(points), pysal.core.IOHandlers.pyShpIO.PurePyShpWrapper):
+            kd = ps.common.KDTree(points)
+        elif issubclass(type(points), ps.core.IOHandlers.pyShpIO.PurePyShpWrapper):
             #loop to find centroids, need to be sure order matches W and data
             centroids = []
             for i in points:
                 centroids.append(i.centroid)
-            kd = pysal.common.KDTree(centroids)
+            kd = ps.common.KDTree(centroids)
             points = kd.data
         elif points is None:
             kd = None
@@ -311,20 +312,53 @@ class ACS_Regions:
                                               scale=2, ratio=True)
         target_th = np.array(target_th)
 
-        '''
-        moved this functionality intp mv_data_prep
-        # replace nan and inf with zeros
-        trouble = np.isfinite(target_est)
-        trouble = np.bitwise_not(trouble)
-        target_est[trouble] = 0.
-        '''
         
         # compute zscores
         # NOTE: zscores computed using all data, i.e. we do not screen out
         #       observations in the exclude list.
         if zscore and target_est is not None:
-            target_est = ZSCORE(target_est)
-        
+            if pca:
+                # Python does not currently have a widely used tool for
+                # computing PCA with missing values. In principle, 
+                # NIPALS (Nonlinear Iterative Partial Least Squares)
+                # can accommodate missing values, but the implementation in MDP
+                # 3.4 will return a matrix of NAN values if there is an NAN
+                # value in the input data. 
+                # http://sourceforge.net/p/mdp-toolkit/mailman/mdp-toolkit-users/?viewmonth=201111
+                # http://stats.stackexchange.com/questions/35561/imputation-of-missing-values-for-pca
+                # Therefore, we impute the missing values when the user
+                # requests PCA; compute the z-scores on the imputed data; and
+                # then pass this on to the PCA step. 
+                # The imputation replaces a missing value with the average of
+                # its neighbors (i.e., its spatial lag). If missing values
+                # remain (due to missing values in a missing value's neighbor
+                # set), then that value is replaced by the column average.
+                w_standardized = copy.deepcopy(w)
+                w_standardized.transform = 'r'
+                target_est_lag = ps.lag_spatial(w_standardized, target_est)
+                # replace troublemakers with their spatial lag
+                trouble = np.isfinite(target_est)
+                trouble = np.bitwise_not(trouble)
+                target_est[trouble] = target_est_lag[trouble]
+                del target_est_lag
+                del trouble
+            # Pandas ignores missing values by default, so we can
+            # compute the z-score and retain the missing values
+            target_est = pd.DataFrame(target_est)
+            target_est = (target_est - target_est.mean(axis=0)) / target_est.std(axis=0)
+            target_est = target_est.values
+            if pca:
+                # For the PCA case we need to replace any remaining missing
+                # values with their column average. Since we now have z-scores,
+                # we know that the average of every column is zero.
+                # If it's not the PCA case, then we can leave the missing
+                # values in as they will be ignored down the line.
+                if target_est.sum() == np.nan:
+                    trouble = np.isfinite(target_est)
+                    trouble = np.bitwise_not(trouble)
+                    target_est[trouble] = 0.
+                    del trouble
+
         # run principle components on target data (skip PCA if pca=False)
         # NOTE: matplotlib has deprecated PCA function, also it only uses SVD 
         #       which can get tripped up by bad data
@@ -350,12 +384,13 @@ class ACS_Regions:
                     pca_node = MDP.nodes.PCANode(svd=True)
                     target_est = pca_node.execute(target_est)  # get principle components
                 except:
-                    # NIPALS (Nonlinear Iterative Partial Least Squares) approach;
-                    # this is intended to handle cases with np.nan in target_est
-                    # http://sourceforge.net/p/mdp-toolkit/mailman/mdp-toolkit-users/?viewmonth=201111
-                    # http://stats.stackexchange.com/questions/35561/imputation-of-missing-values-for-pca
-                    pca_node = MDP.nodes.NIPALSNode()
-                    target_est = pca_node.execute(target_est)  # get principle components
+                    # NIPALS would be a better approach than imputing
+                    # missing values entirely, but MDP 3.4 does not handle
+                    # missing values. Leaving this code as a place holder in
+                    # case MDP is updated later.
+                    ###pca_node = MDP.nodes.NIPALSNode()
+                    ###target_est = pca_node.execute(target_est)  # get principle components
+                    raise Exception, "PCA not possible given input data and settings. Set zscore=True to automatically impute missing values or address missing values in advance."
 
             pca_variance = np.sqrt(pca_node.d / pca_node.total_variance)
             target_est = target_est * pca_variance  # weighting for SSD
@@ -425,7 +460,7 @@ class ACS_Regions:
                 # collect stats on SSD for each region
                 end_ssds = np.array([UTILS.sum_squares(region, target_est) for region in regions])
                 ssd_improvement = (end_ssds - start_ssds) / start_ssds
-                ssd_improvement[np.isnan(ssd_improvement)] = 0.0  # makes singlton regions have 0 improvment
+                ssd_improvement[np.isnan(ssd_improvement)] = 0.0  # makes singleton regions have 0 improvement
                 ssds = np.vstack((start_ssds, end_ssds, ssd_improvement)).T
                 if compactness:
                     # capture compactness from final solution
