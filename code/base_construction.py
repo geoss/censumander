@@ -407,7 +407,7 @@ def region_min_count(w, count_th_min, count_est, seed, used_ids, neighbors, regi
     Construct a region based on a count constraint only
     '''
     feasible = True
-    count = count_est[seed]
+    count = copy.copy(count_est[seed])
     while count < count_th_min:
         # keep adding areas until region meets count threshold
         if not neighbors:
