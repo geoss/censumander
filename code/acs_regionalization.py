@@ -353,7 +353,7 @@ class ACS_Regions:
                 # we know that the average of every column is zero.
                 # If it's not the PCA case, then we can leave the missing
                 # values in as they will be ignored down the line.
-                if target_est.sum() == np.nan:
+                if np.isfinite(target_est.sum()) == False:
                     trouble = np.isfinite(target_est)
                     trouble = np.bitwise_not(trouble)
                     target_est[trouble] = 0.
