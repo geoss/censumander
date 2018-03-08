@@ -1,4 +1,4 @@
-# CensusMander: A Tool for Reducing the Margins of Error in American Community Survey Data
+# A Tool for Reducing the Margins of Error in American Community Survey Data
 
 The American Community Survey (ACS) is the largest survey of US households and is the principal source for neighborhood scale information about the US population and economy. The ACS is used to allocate billions in federal spending and is a critical input to social scientific research in the US. However, estimates from the ACS can be highly unreliable. For example, in over 72% of census tracts, the estimated number of children under 5 in poverty has a margin of error greater than the estimate. Uncertainty of this magnitude complicates the use of social data in policy making, research, and governance. 
 
