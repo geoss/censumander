@@ -51,9 +51,11 @@ def base_region_iterator(w, count_th_min, count_th_max, count_est, target_th, ta
             ids = np.random.permutation(ids).tolist()
             if len(ids) < base_solutions:
                 base_solutions = len(ids)
-                print "WARNING: number of included areas (%c) is less than base_solutions (%c); proceeding with %c base solutions"%(len(ids), base_solutions, len(ids))
+                print(
+                    "WARNING: number of included areas (%c) is less than base_solutions (%c); proceeding with %c base solutions" %
+                    (len(ids), base_solutions, len(ids)))
         else:
-            raise Exception, 'invalid value passed to anchor parameter (must be int or None)'
+            raise Exception('invalid value passed to anchor parameter (must be int or None)')
         # create a list of all n IDs for each base_solution to be run 
         for anchor_iter in ids[0:base_solutions]:
             kd_ordering = kd.query(points[anchor_iter], k=w.n, p=2)
@@ -138,7 +140,7 @@ def base_region_iterator(w, count_th_min, count_th_max, count_est, target_th, ta
         return best_regions, best_id2region, exclude, best_enclaves
     else:
         # no feasible solution; return the problem IDs by adding to the exclude list 
-        print "no feasible solution"
+        print("no feasible solution")
         exclude = copy.copy(exclude)
         exclude.extend(ids)
         return [], False, exclude, enclaves
@@ -453,8 +455,6 @@ def enclave_test_max_count(region, target_parts, target_th,\
         return False
     return True
 ########################
-
-
 
 
 def get_neighbors(w, seed, neighbors, region, used_ids): 

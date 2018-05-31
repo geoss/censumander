@@ -253,7 +253,7 @@ class ACS_Regions:
         elif points is None:
             kd = None
         else:
-            raise Exception, 'Unsupported type passed to points'
+            raise Exception('Unsupported type passed to points')
 
 
         # dictionary allowing multivariate and univariate flexibility
@@ -287,9 +287,11 @@ class ACS_Regions:
 
         if total_vars == 0:
             target_est = None
-            print 'warning: optimization steps will not be run since no target_est variables provided'
+            print('warning: optimization steps will not be run since no target_est variables provided')
         else:
-            target_est = np.ones((rows, total_vars)) * -999
+            print(rows)
+            print(total_vars)
+            target_est = np.ones((rows, int(total_vars))) * -999
 
         # organize and check the input data; prep data for actual computations
         position = 0
@@ -390,7 +392,8 @@ class ACS_Regions:
                     # case MDP is updated later.
                     ###pca_node = MDP.nodes.NIPALSNode()
                     ###target_est = pca_node.execute(target_est)  # get principle components
-                    raise Exception, "PCA not possible given input data and settings. Set zscore=True to automatically impute missing values or address missing values in advance."
+                    raise Exception(
+                        "PCA not possible given input data and settings. Set zscore=True to automatically impute missing values or address missing values in advance.")
 
             pca_variance = np.sqrt(pca_node.d / pca_node.total_variance)
             target_est = target_est * pca_variance  # weighting for SSD
@@ -482,7 +485,7 @@ class ACS_Regions:
                 else:
                     compacts = np.ones((len(regions),3)) * -999.0
                 exit = 'no local improvement'
-                print "Did not run local improvement"
+                print("Did not run local improvement")
                 time4a = time.time()
 
         time_output['base_wrapup'] = time3a - time3
@@ -663,7 +666,7 @@ def mv_data_prep(target_est_general, target_th_general, target_th_all,\
     else:
         # check to ensure there is one CV per variable
         if cols/scale != target_th_general.shape[0]:
-            raise Exception, "input data does not conform"
+            raise Exception("input data does not conform")
         else:
             # set external CV thresholds
             target_th.extend(target_th_general)
@@ -737,7 +740,7 @@ def function_picker(count_est, count_th_min, count_th_max, target_th_count,\
         enclave_test = BASE.enclave_test_max_count # same as max test since min already satisfied
         local_test = LOCAL.local_test_min_max_count
     else:
-        raise Exception, "inconsistent set of threshold parameters passed"
+        raise Exception("inconsistent set of threshold parameters passed")
     return build_region, enclave_test, local_test
 
 
