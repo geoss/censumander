@@ -673,6 +673,7 @@ def mv_data_prep(target_est_general, target_th_general, target_th_all,\
     # compute the actual estimates for use in SSD computations
     if scale == 2:
         # ratio and proportion case
+        print("entering ratio case - delete me later")
         target_combo_temp = np.ones([rows, cols/scale]) * -999.0
         col = 0
         for i in range(0, cols, 2):
